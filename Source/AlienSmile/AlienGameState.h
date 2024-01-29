@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FTransform GetSpawnTransform();
 
+	UFUNCTION(BlueprintCallable)
+	void ResetPlayer();
+
 	UPROPERTY(VisibleAnywhere)
 	FVector SpawnLocation;
 
@@ -49,6 +52,8 @@ public:
 	FTransform SpawnTransform;
 
 	FTimerHandle SpawnTimer;
+
+	FTimerHandle ResetPlayerTimer;
 
 	class AMonster * CurrentMonster;
 	

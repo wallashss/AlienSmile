@@ -8,7 +8,7 @@
 #include "Engine/Blueprint.h"
 #include <Kismet/GameplayStatics.h>
 #include <Components/CapsuleComponent.h>
-
+#include <Camera/CameraComponent.h>
 
 
 AAlienGameState::AAlienGameState()
@@ -39,6 +39,7 @@ AAlienGameState::AAlienGameState()
 // UObject* SpawnActor = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), NULL, TEXT("/Game/DEXIED/Foliage/Tree/BP_TreeDestroyed_Style_1.BP_TreeDestroyed_Style_1")));
 
 // UBlueprint* GeneratedBP = Cast<UBlueprint>(SpawnActor);
+
 }
 
 
@@ -46,7 +47,10 @@ void AAlienGameState::BeginPlay()
 {
     Super::BeginPlay();
 
+
     SpawnMonster();
+
+
 }
 
 void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * DefeatTrigger, UClass * InProjectileClass)
@@ -61,7 +65,6 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * DefeatTrigger, UClas
         SpawnTransform = SpawnLoc->GetTransform();
         WPRINT(TEXT("Setup Game Done"));
     }
-
     
     CurrentMonster = Cast<AMonster>(UGameplayStatics::GetActorOfClass(GetWorld(), AMonster::StaticClass()));
 
@@ -71,8 +74,9 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * DefeatTrigger, UClas
         WPRINT(TEXT("DID NOT FOUND OUR MONSTER"));
         return;    
     }
-    WPRINT(TEXT("WE FOUND OUR MONSTER"));
+    WPRINT(TEXT("WE FOUND OUR MONSTER!!!!"));
 
+    GetWorld()->GetTimerManager().SetTimer(ResetPlayerTimer, this, &AAlienGameState::ResetPlayer, 0.01f);
 }
 
 void AAlienGameState::RequestNewMonster()
@@ -84,6 +88,37 @@ void AAlienGameState::RequestNewMonster()
 FTransform AAlienGameState::GetSpawnTransform()
 {
     return SpawnTransform;
+}
+
+void AAlienGameState::ResetPlayer()
+{
+    APlayerController * PlayerController = GetWorld()->GetFirstPlayerController();
+    if(PlayerController)
+    {
+        auto Pawn = PlayerController->GetPawn(); 
+        auto Cam = Pawn->FindComponentByClass<UCameraComponent>();
+
+        if (Cam)
+        {
+            auto PawnLoc = Pawn->GetActorLocation();
+            auto CamLoc = Cam->GetComponentLocation();
+            auto Diff = CamLoc - PawnLoc;
+            UE_LOG(LogAlienSmile, Warning, TEXT("Player: %s | Cam: %s | Diff: %s"), *PawnLoc.ToString(), *CamLoc.ToString(), *Diff.ToString() );
+            Pawn->SetActorLocation(PawnLoc - FVector(Diff.X, Diff.Y, 0));
+
+        }
+        else
+        {
+            WPRINT(TEXT("NO CAMERA"));
+        }
+        // APlayerController->
+        // PlayerController->SetViewTarget(MainCamera);
+    }
+    else
+    {
+        WPRINT(TEXT("NO PLAYER LOC????"));
+    }
+    WPRINT(TEXT("SETUP DONE????"));
 }
 
 void AAlienGameState::SpawnMonster()
