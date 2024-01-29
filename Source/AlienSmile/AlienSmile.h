@@ -4,3 +4,8 @@
 
 #include "CoreMinimal.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogAlienSmile, Log, All);
+
+
+
+#define WPRINT(...) UE_LOG(LogAlienSmile, Warning, ##__VA_ARGS__)
