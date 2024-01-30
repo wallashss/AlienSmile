@@ -1,10 +1,10 @@
 # Fofuxo Vs Alien 
 
 
-![Cover Image](Cape.png).
+![Cover Image](Cape.jpg).
 
 
-VR game developed during the 2024 Global Game Jam on the São Luís website | SebraeLab.
+VR game developed during the 2024 Global Game Jam on the São Luís site | SebraeLab.
 
 Link to the Game Page: 
 
