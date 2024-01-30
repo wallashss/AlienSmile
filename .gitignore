@@ -13,3 +13,5 @@ Platforms
 *.suo
 *.xcodeproj
 *.xcworkspace
+
+Config/*
