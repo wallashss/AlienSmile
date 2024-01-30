@@ -7,6 +7,7 @@
 #include "Monster.h"
 #include "Engine/Blueprint.h"
 #include <Kismet/GameplayStatics.h>
+#include <Kismet/KismetMathLibrary.h>
 #include <Components/CapsuleComponent.h>
 #include <Camera/CameraComponent.h>
 
@@ -47,6 +48,8 @@ void AAlienGameState::BeginPlay()
 {
     Super::BeginPlay();
 
+    WPRINT(TEXT("**************GAME START**************"))
+
 
     SpawnMonster();
 
@@ -70,7 +73,6 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * DefeatTrigger, UClas
 
     if (!CurrentMonster)
     {
-        // CurrentMonster->OnActorHit.AddDynamic(this, &AAlienGameState::OnMonsterHit);
         WPRINT(TEXT("DID NOT FOUND OUR MONSTER"));
         return;    
     }
@@ -100,25 +102,36 @@ void AAlienGameState::ResetPlayer()
 
         if (Cam)
         {
+            auto CamRot = Cam->GetComponentRotation();
+            auto PawnRot = Pawn->GetActorRotation();
+
+            UE_LOG(LogAlienSmile, Warning, TEXT("Cam Rot: %s"),*CamRot.ToString());
+            UE_LOG(LogAlienSmile, Warning, TEXT("Pawn Rot: %s"),*Pawn->GetActorRotation().ToString());
+
+            auto TempRot = UKismetMathLibrary::ComposeRotators(CamRot.GetInverse(), PawnRot);
+            auto FinalRot = UKismetMathLibrary::ComposeRotators(PawnRot, TempRot);
+            FinalRot.Roll = 0.0f;
+            FinalRot.Pitch = 0.0f;
+            Pawn->SetActorRotation(FinalRot);
+
             auto PawnLoc = Pawn->GetActorLocation();
             auto CamLoc = Cam->GetComponentLocation();
+
             auto Diff = CamLoc - PawnLoc;
+
             UE_LOG(LogAlienSmile, Warning, TEXT("Player: %s | Cam: %s | Diff: %s"), *PawnLoc.ToString(), *CamLoc.ToString(), *Diff.ToString() );
             Pawn->SetActorLocation(PawnLoc - FVector(Diff.X, Diff.Y, 0));
-
+        
         }
         else
         {
             WPRINT(TEXT("NO CAMERA"));
         }
-        // APlayerController->
-        // PlayerController->SetViewTarget(MainCamera);
     }
     else
     {
         WPRINT(TEXT("NO PLAYER LOC????"));
     }
-    WPRINT(TEXT("SETUP DONE????"));
 }
 
 void AAlienGameState::SpawnMonster()
