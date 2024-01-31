@@ -12,9 +12,9 @@ Video: https://youtube.com/shorts/H9Xh24-uWdU?feature=share
 
 ## Team
 
-Antonio Froz
-Sasha Nicholas
-Wallas Santos
+- Antonio Froz
+- Sasha Nicholas
+- Wallas Santos
 
 ## Technologies
 
