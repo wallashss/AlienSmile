@@ -4,7 +4,7 @@
 ![Cover Image](Cape.jpg).
 
 
-VR game developed during the 2024 Global Game Jam on the São Luís site | SebraeLab.
+VR game developed during the 2024 Global Game Jam on the São Luís site | SebraeLab. The theme was "Make me Laugh".
 
 Link to the Game Page: https://globalgamejam.org/games/2024/alien-shooter-7
 
