@@ -7,7 +7,8 @@
 VR game developed during the 2024 Global Game Jam on the São Luís site | SebraeLab.
 
 Link to the Game Page: https://globalgamejam.org/games/2024/alien-shooter-7
-Video: 
+
+Video: https://youtube.com/shorts/H9Xh24-uWdU?feature=share
 
 ## Team
 
