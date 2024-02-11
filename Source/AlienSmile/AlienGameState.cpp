@@ -51,7 +51,7 @@ void AAlienGameState::BeginPlay()
     WPRINT(TEXT("**************GAME START**************"))
 
 
-    SpawnMonster();
+    // SpawnMonster();
 
 
 }

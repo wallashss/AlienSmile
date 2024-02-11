@@ -48,7 +48,7 @@ void AMonster::BeginPlay()
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMonster::OnMOnsterOverlap);
 	OnActorHit.AddDynamic(this, &AMonster::OnMonsterHit);
 	
-	IsMoving = true;
+	// IsMoving = true;
 	
 }
 
