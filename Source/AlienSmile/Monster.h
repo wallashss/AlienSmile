@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "Monster.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMonsterDefeated);
+
+
 UCLASS()
 class ALIENSMILE_API AMonster : public ACharacter
 {
@@ -58,7 +61,7 @@ public:
 	void StopSmiling();
 
 	UFUNCTION(Category = "Alien")
-	void OnMOnsterOverlap(class UPrimitiveComponent* OverlappedComponent, 
+	void OnMonsterOverlap(class UPrimitiveComponent* OverlappedComponent, 
 										  class AActor* OtherActor, 
 										  class UPrimitiveComponent* OtherComp, 
 										  int32 OtherBodyIndex, 
@@ -68,10 +71,19 @@ public:
 	UFUNCTION(Category = "Alien")
 	void OnMonsterHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& hit);
 
-public:
 	bool CheckDead();
 
 	void ResetMonster();
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Alien")
@@ -99,16 +111,7 @@ public:
 
 	FRotator MonsterRot;
 
+	FOnMonsterDefeated OnMonsterDefeated;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };

@@ -6,6 +6,11 @@
 #include "GameFramework/GameStateBase.h"
 #include "AlienGameState.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameOver);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScoreUp);
+
+
 /**
  * 
  */
@@ -23,7 +28,10 @@ public:
 	void SpawnMonster();
 
 	UFUNCTION(BlueprintCallable)
-	void SetupGame(AActor * SpawnLoc, AActor * DefeatTrigger, UClass * ProjectileClass);
+	void SetupGame(AActor * SpawnLoc, AActor * GameOver);
+
+	UFUNCTION(BlueprintCallable)
+	void OnMonsterDefeated();
 
 	UFUNCTION(BlueprintCallable)
 	void RequestNewMonster();
@@ -34,6 +42,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ResetPlayer();
 
+	UFUNCTION(BlueprintCallable)
+	void SetGameOver();
+
+	UFUNCTION()
+	void OnDefeatTriggerOverlap(UPrimitiveComponent* OverlappedComponent, 
+										  AActor* OtherActor, 
+										  UPrimitiveComponent* OtherComp, 
+										  int32 OtherBodyIndex, 
+										  bool bFromSweep, 
+										  const FHitResult & SweepResult);
+public:
+
 	UPROPERTY(VisibleAnywhere)
 	FVector SpawnLocation;
 
@@ -43,11 +63,16 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	FRotator SpawnRotation;
 
+	UPROPERTY(VisibleAnywhere)
+	class UStaticMeshComponent* GameOverMesh;
+
 	UObject * MonsterObject;
 
 	UObject * ProjectileObject;
 
 	UClass * ProjectileClass;
+
+	class AScorePanel * ScorePanel;
 
 	FTransform SpawnTransform;
 
@@ -56,5 +81,13 @@ public:
 	FTimerHandle ResetPlayerTimer;
 
 	class AMonster * CurrentMonster;
+
+	UPROPERTY( BlueprintAssignable, Category= "Events")
+	FOnGameOver OnGameOver;
+
+	UPROPERTY( BlueprintAssignable, Category= "Events")
+	FOnScoreUp OnScoreUp;
+
+	int Score;
 	
 };

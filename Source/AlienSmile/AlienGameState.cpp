@@ -3,13 +3,18 @@
 
 #include "AlienGameState.h"
 
-#include "AlienSmile.h"
-#include "Monster.h"
-#include "Engine/Blueprint.h"
+#include <Camera/CameraComponent.h>
+#include <Components/BoxComponent.h>
+#include <Components/CapsuleComponent.h>
+#include <Components/StaticMeshComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetMathLibrary.h>
-#include <Components/CapsuleComponent.h>
-#include <Camera/CameraComponent.h>
+#include <Engine/Blueprint.h>
+
+#include "DefeatTrigger.h"
+#include "AlienSmile.h"
+#include "Monster.h"
+#include "ScorePanel.h"
 
 
 AAlienGameState::AAlienGameState()
@@ -40,6 +45,7 @@ AAlienGameState::AAlienGameState()
 // UObject* SpawnActor = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), NULL, TEXT("/Game/DEXIED/Foliage/Tree/BP_TreeDestroyed_Style_1.BP_TreeDestroyed_Style_1")));
 
 // UBlueprint* GeneratedBP = Cast<UBlueprint>(SpawnActor);
+    Score = 0;
 
 }
 
@@ -56,8 +62,9 @@ void AAlienGameState::BeginPlay()
 
 }
 
-void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * DefeatTrigger, UClass * InProjectileClass)
+void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * GameOver)
 {
+    // Setup Monster
     WPRINT(TEXT("Setup Game"));
     if (SpawnLoc)
     {
@@ -71,20 +78,67 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * DefeatTrigger, UClas
     
     CurrentMonster = Cast<AMonster>(UGameplayStatics::GetActorOfClass(GetWorld(), AMonster::StaticClass()));
 
+    if(CurrentMonster)
+    {
+        CurrentMonster->OnMonsterDefeated.AddDynamic(this, &AAlienGameState::OnMonsterDefeated);
+    }
     if (!CurrentMonster)
     {
         WPRINT(TEXT("DID NOT FOUND OUR MONSTER"));
         return;    
     }
-    WPRINT(TEXT("WE FOUND OUR MONSTER!!!!"));
 
+    // Reset Player
     GetWorld()->GetTimerManager().SetTimer(ResetPlayerTimer, this, &AAlienGameState::ResetPlayer, 0.01f);
+
+    // Setup defeat trigger
+    auto DefeatTrigger = Cast<ADefeatTrigger>(UGameplayStatics::GetActorOfClass(GetWorld(), ADefeatTrigger::StaticClass()));
+
+    if(DefeatTrigger)
+    {
+        DefeatTrigger->BoxColisor->OnComponentBeginOverlap.AddDynamic(this, &AAlienGameState::OnDefeatTriggerOverlap);
+    }
+
+    // Setup Game Over
+    if(GameOver)
+    {
+        GameOverMesh = GameOver->GetComponentByClass<UStaticMeshComponent>();
+        if(!GameOverMesh)
+        {
+            WPRINT(TEXT("No Game Over Set!"));
+        }
+    }
+
+    // Setup Score
+    Score = 0;
+    ScorePanel = Cast<AScorePanel>(UGameplayStatics::GetActorOfClass(GetWorld(), AScorePanel::StaticClass()));
+
+    if (ScorePanel)
+    {
+        ScorePanel->InitScore(Score);
+    }
+    else
+    {
+        WPRINT(TEXT("FAILED TO GET SCORE"));
+    }
+}
+
+void AAlienGameState::OnMonsterDefeated()
+{
+    RequestNewMonster();
+
+    OnScoreUp.Broadcast();
+
+    Score++;
+    if(ScorePanel)
+    {
+        ScorePanel->UpdateScore(Score);
+    }
 }
 
 void AAlienGameState::RequestNewMonster()
 {
     GetWorld()->GetTimerManager().SetTimer(SpawnTimer, this, &AAlienGameState::SpawnMonster, 1.0f);
-    // SpawnMonster();
 }
 
 FTransform AAlienGameState::GetSpawnTransform()
@@ -132,6 +186,39 @@ void AAlienGameState::ResetPlayer()
     {
         WPRINT(TEXT("NO PLAYER LOC????"));
     }
+}
+
+
+void AAlienGameState::OnDefeatTriggerOverlap(UPrimitiveComponent* OverlappedComponent, 
+										  AActor* OtherActor, 
+										  UPrimitiveComponent* OtherComp, 
+										  int32 OtherBodyIndex, 
+										  bool bFromSweep, 
+										  const FHitResult & SweepResult)
+{
+	WPRINT(TEXT("GAME STATE: OVERLAP WITH DEFEAT!!"));
+
+	auto monster = Cast<AMonster>(OtherActor);
+	if (monster)
+	{
+		monster->SetWinner();
+	}
+
+    SetGameOver();
+}
+
+
+void AAlienGameState::SetGameOver()
+{
+    // If you would like to do something with this event
+    OnGameOver.Broadcast();
+
+    if(GameOverMesh)
+    {
+        GameOverMesh->SetVisibility(true);
+    }
+
+
 }
 
 void AAlienGameState::SpawnMonster()

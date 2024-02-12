@@ -45,14 +45,14 @@ void AMonster::BeginPlay()
 
 	MonsterRot = GetActorRotation();
 
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMonster::OnMOnsterOverlap);
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMonster::OnMonsterOverlap);
 	OnActorHit.AddDynamic(this, &AMonster::OnMonsterHit);
 	
 	// IsMoving = true;
 	
 }
 
-void AMonster::OnMOnsterOverlap(UPrimitiveComponent* OverlappedComponent, 
+void AMonster::OnMonsterOverlap(UPrimitiveComponent* OverlappedComponent, 
 										  AActor* OtherActor, 
 										  UPrimitiveComponent* OtherComp, 
 										  int32 OtherBodyIndex, 
@@ -66,22 +66,18 @@ void AMonster::OnMOnsterOverlap(UPrimitiveComponent* OverlappedComponent,
 
 void AMonster::OnMonsterHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& hit)
 {
-	// UE_LOG(LogAlienSmile, Warning, TEXT("MOnster HIT: %s"), *OtherActor->GetActorLabel());
 	auto FunnyObj = OtherActor->GetComponentByClass<UFunnyObject>();
 
 	if(!FunnyObj)
 	{
 		return;
 	}
-	// WPRINT(TEXT("FOUND FUNNY OBJ!"));
 
 	
 	if (FunnyObj->Activated)
 	{
-		// WPRINT(TEXT("FOUND FUNNY OBJ 2!"));
 		return;
 	}
-	// WPRINT(TEXT("FOUND FUNNY OBJ 2!"));
 
 	if (FunnyObj->FunnyIndex != FunnyIdx)
 	{
@@ -150,10 +146,11 @@ bool AMonster::CheckDead()
 {
 	if(HP <= 0)
 	{
-		WPRINT(TEXT("DEAD!!!"));
 		StopMove();
 		OnMonsterDead();
 		Dead = true;
+
+		OnMonsterDefeated.Broadcast();
 		return true;
 	}
 	return false;
@@ -168,7 +165,6 @@ void AMonster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AMonster::Smile()
 {
-	WPRINT(TEXT("____MONSTER SMILE!!!"));
 	IsMoving = false;
 	OnMonsterSmiling();
 
@@ -181,7 +177,6 @@ void AMonster::StopSmiling()
 {
 	IsMoving = true;
 	IsSmiling = false;
-	// UKismetMathLibrary::getrota
 
 	SetActorRotation(MonsterRot);
 	OnMonsterStopSmiling();
