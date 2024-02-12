@@ -31,6 +31,9 @@ public:
 	void SetupGame(AActor * SpawnLoc, AActor * GameOver);
 
 	UFUNCTION(BlueprintCallable)
+	void InitGame();
+
+	UFUNCTION(BlueprintCallable)
 	void OnMonsterDefeated();
 
 	UFUNCTION(BlueprintCallable)
@@ -38,6 +41,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FTransform GetSpawnTransform();
+
+	
 
 	UFUNCTION(BlueprintCallable)
 	void ResetPlayer();

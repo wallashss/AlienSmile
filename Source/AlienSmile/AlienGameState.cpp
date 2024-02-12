@@ -110,17 +110,18 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * GameOver)
     }
 
     // Setup Score
-    Score = 0;
+    
     ScorePanel = Cast<AScorePanel>(UGameplayStatics::GetActorOfClass(GetWorld(), AScorePanel::StaticClass()));
+}
 
+void AAlienGameState::InitGame()
+{
+    Score = 0;
     if (ScorePanel)
     {
         ScorePanel->InitScore(Score);
     }
-    else
-    {
-        WPRINT(TEXT("FAILED TO GET SCORE"));
-    }
+    RequestNewMonster();
 }
 
 void AAlienGameState::OnMonsterDefeated()
@@ -198,13 +199,12 @@ void AAlienGameState::OnDefeatTriggerOverlap(UPrimitiveComponent* OverlappedComp
 {
 	WPRINT(TEXT("GAME STATE: OVERLAP WITH DEFEAT!!"));
 
-	auto monster = Cast<AMonster>(OtherActor);
-	if (monster)
+	auto Monster = Cast<AMonster>(OtherActor);
+	if (Monster)
 	{
-		monster->SetWinner();
+		Monster->SetWinner();
+        SetGameOver();
 	}
-
-    SetGameOver();
 }
 
 
@@ -217,13 +217,10 @@ void AAlienGameState::SetGameOver()
     {
         GameOverMesh->SetVisibility(true);
     }
-
-
 }
 
 void AAlienGameState::SpawnMonster()
 {
-
     // if(MonsterObject)
     // {
     //     UBlueprint* GeneratedBP = Cast<UBlueprint>(MonsterObject);
