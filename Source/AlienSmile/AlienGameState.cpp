@@ -82,6 +82,7 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * GameOver)
     {
         CurrentMonster->OnMonsterDefeated.AddDynamic(this, &AAlienGameState::OnMonsterDefeated);
     }
+
     if (!CurrentMonster)
     {
         WPRINT(TEXT("DID NOT FOUND OUR MONSTER"));
@@ -229,35 +230,16 @@ void AAlienGameState::SetGameOver()
 
 void AAlienGameState::SpawnMonster()
 {
-    // if(MonsterObject)
-    // {
-    //     UBlueprint* GeneratedBP = Cast<UBlueprint>(MonsterObject);
-
-    //     if(GeneratedBP)
-    //     {
-    //         CurrentMonster = Cast<AMonster>(GetWorld()->SpawnActor(GeneratedBP->GeneratedClass, &SpawnLocation, &SpawnRotation));
-    //         if(CurrentMonster)
-    //         {
-    //             // CurrentMonster->SetActorLabel(TEXT("Monster"));
-    //             WPRINT(TEXT("SPAWN MONSTER"));
-    //         }
-    //         else
-    //         {
-    //             WPRINT(TEXT("FAILED TO SPAWN MONSTER: NULL"));
-    //         }
-    //     }
- 
-    // }
     if(CurrentMonster)
     {
-        // CurrentMonster->MonsterDir
         CurrentMonster->MonsterDir = SpawnDir;
         CurrentMonster->MonsterRot = SpawnRotation;
         CurrentMonster->SetActorLocation(SpawnLocation);
         CurrentMonster->ResetMonster();
     }
-
-
-    // auto NewMonster = 
+    else
+    {
+        WPRINT(TEXT("NO MONSTER"));
+    }
 
 }
