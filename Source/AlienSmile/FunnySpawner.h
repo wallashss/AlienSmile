@@ -29,11 +29,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
+public:
+	UPROPERTY(EditAnywhere, Category = "Alien")
+	bool IsNewSpawner;
 
+	UPROPERTY(EditAnywhere, Category = "Alien")
+	TArray<TSubclassOf<AActor>> Objects;
 private:
 	TArray<UBlueprint*> FunnyObjectsBPs;
 
@@ -41,5 +43,6 @@ private:
 	FRotator LastRot;
 
 	FTimerHandle SpawnTimer;
+
 
 };

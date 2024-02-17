@@ -11,7 +11,7 @@
 AFunnySpawner::AFunnySpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 
 	// REGISTER_FUNNY_OBJ(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_Chicken.BP_Chicken'"))
@@ -25,7 +25,7 @@ AFunnySpawner::AFunnySpawner()
 		
 	// }
 
-	
+	IsNewSpawner = false;
 	// auto a = FindObject<UObject>(nullptr, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_Monster.BP_Monster'"));
 
 }
@@ -34,6 +34,15 @@ AFunnySpawner::AFunnySpawner()
 void AFunnySpawner::SpawnRandom()
 {
 	OnSpawn();
+
+	if(Objects.Num())
+	{
+		FActorSpawnParameters SpawnInfo;
+		
+		LastLoc = GetActorLocation();
+		LastRot = GetActorRotation();
+		GetWorld()->SpawnActor(Objects[0], &LastLoc, &LastRot);
+	}
 	// UE_LOG(LogAlienSmile, Warning, TEXT("Spawn???"));
 	// if(!FunnyObjectsBPs.IsEmpty())
 	// {
@@ -58,6 +67,8 @@ void AFunnySpawner::StopSpawn()
 void AFunnySpawner::BeginPlay()
 {
 	Super::BeginPlay();
+
+
 
 	// FunnyObjectsArr = {
 	// 	TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_Chicken.BP_Chicken'")
@@ -84,12 +95,5 @@ void AFunnySpawner::BeginPlay()
 
 	GetWorldTimerManager().ClearTimer(SpawnTimer);
 	GetWorldTimerManager().SetTimer(SpawnTimer, this, &AFunnySpawner::SpawnRandom, 3.0f, true);
-}
-
-// Called every frame
-void AFunnySpawner::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 

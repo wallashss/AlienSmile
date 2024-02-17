@@ -124,6 +124,11 @@ void AAlienGameState::InitGame()
     RequestNewMonster();
 }
 
+void AAlienGameState::ResetGame()
+{
+    UGameplayStatics::OpenLevel(this, FName(TEXT("LevelAlien")));
+}
+
 void AAlienGameState::OnMonsterDefeated()
 {
     RequestNewMonster();
@@ -217,6 +222,9 @@ void AAlienGameState::SetGameOver()
     {
         GameOverMesh->SetVisibility(true);
     }
+
+    GetWorldTimerManager().SetTimer(ResetGameTimer, this, &AAlienGameState::ResetGame, 3.0f);
+    // ResetGameTimer
 }
 
 void AAlienGameState::SpawnMonster()

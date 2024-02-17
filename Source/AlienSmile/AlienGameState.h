@@ -34,6 +34,9 @@ public:
 	void InitGame();
 
 	UFUNCTION(BlueprintCallable)
+	void ResetGame();
+
+	UFUNCTION(BlueprintCallable)
 	void OnMonsterDefeated();
 
 	UFUNCTION(BlueprintCallable)
@@ -84,6 +87,8 @@ public:
 	FTimerHandle SpawnTimer;
 
 	FTimerHandle ResetPlayerTimer;
+
+	FTimerHandle ResetGameTimer;
 
 	class AMonster * CurrentMonster;
 
