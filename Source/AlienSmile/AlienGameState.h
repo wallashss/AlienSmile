@@ -99,5 +99,7 @@ public:
 	FOnScoreUp OnScoreUp;
 
 	int Score;
+
+	int32 FunnyIndicesCount;
 	
 };

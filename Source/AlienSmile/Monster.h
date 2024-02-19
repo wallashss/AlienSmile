@@ -103,7 +103,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Alien")
 	float SmilingCooldown;
-
 	
 	FTimerHandle SmilingCooldownTimer;
 

@@ -84,7 +84,7 @@ void AMonster::OnMonsterHit(AActor* SelfActor, AActor* OtherActor, FVector Norma
 		return;
 	}
 
-	FunnyObj->Activated = true;
+	FunnyObj->SetActivated();
 	Smile();
 
 

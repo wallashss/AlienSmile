@@ -11,11 +11,11 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Engine/Blueprint.h>
 
-#include "DefeatTrigger.h"
 #include "AlienSmile.h"
+#include "DefeatTrigger.h"
+#include "FunnySpawner.h"
 #include "Monster.h"
 #include "ScorePanel.h"
-
 
 AAlienGameState::AAlienGameState()
 {
@@ -123,6 +123,20 @@ void AAlienGameState::InitGame()
         ScorePanel->InitScore(Score);
     }
     RequestNewMonster();
+
+    TArray<AActor*> Spawners;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFunnySpawner::StaticClass(), Spawners);
+
+    for(auto a : Spawners)
+    {
+        if(auto s = Cast<AFunnySpawner>(a))
+        {
+            s->StartSpawn();
+
+            FunnyIndicesCount = s->Objects.Num();
+            UE_LOG(LogAlienSmile, Warning, TEXT("Init Game / s->Objects.Num(): %d "), s->Objects.Num());
+        }
+    }
 }
 
 void AAlienGameState::ResetGame()
@@ -236,6 +250,9 @@ void AAlienGameState::SpawnMonster()
         CurrentMonster->MonsterRot = SpawnRotation;
         CurrentMonster->SetActorLocation(SpawnLocation);
         CurrentMonster->ResetMonster();
+        CurrentMonster->FunnyIdx = FMath::RandRange(0, FunnyIndicesCount - 1);
+
+        UE_LOG(LogAlienSmile, Warning, TEXT("Monster IDX: %d"), CurrentMonster->FunnyIdx);
     }
     else
     {

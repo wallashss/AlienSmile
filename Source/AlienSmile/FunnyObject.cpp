@@ -12,9 +12,6 @@ UFunnyObject::UFunnyObject()
 
 	Activated = false;
 	// ...
-
-	
-
 }
 
 void UFunnyObject::Disapear()
@@ -22,15 +19,19 @@ void UFunnyObject::Disapear()
 	GetOwner()->Destroy();
 }
 
+void UFunnyObject::SetActivated()
+{
+	Activated = true;
+	GetOwner()->GetWorldTimerManager().SetTimer(ToDieTimer, this, &UFunnyObject::Disapear, 3.0f, false);
+}
+
+
 // Called when the game starts
 void UFunnyObject::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetOwner()->GetWorldTimerManager().SetTimer(ToDieTimer, this, &UFunnyObject::Disapear, 1200.0f, false);
-	// ...
-	// GetActor
-	
+	GetOwner()->GetWorldTimerManager().SetTimer(ToDieTimer, this, &UFunnyObject::Disapear, 60.0f, false);
 }
 
 

@@ -21,6 +21,9 @@ public:
 	UFUNCTION()
 	void Disapear();
 
+	UFUNCTION()
+	void SetActivated();
+
 public:
 	UPROPERTY(EditAnywhere)
 	bool Activated;
@@ -28,16 +31,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 FunnyIndex;
 
-
-
-
 	float MaxTime;
 
 	FTimerHandle ToDieTimer;
-
-
-
-
 
 protected:
 	// Called when the game starts

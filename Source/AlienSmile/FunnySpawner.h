@@ -22,6 +22,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StopSpawn();
 
+	UFUNCTION(BlueprintCallable)
+	void StartSpawn();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSpawn();
 
