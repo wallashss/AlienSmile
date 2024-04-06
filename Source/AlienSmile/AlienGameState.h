@@ -10,6 +10,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameOver);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnScoreUp);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameStart);
+
 
 /**
  * 
@@ -45,13 +47,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FTransform GetSpawnTransform();
 
-	
-
 	UFUNCTION(BlueprintCallable)
 	void ResetPlayer();
 
 	UFUNCTION(BlueprintCallable)
 	void SetGameOver();
+
+	UFUNCTION(BlueprintCallable)
+	void PauseGame();
+
+	UFUNCTION(BlueprintCallable)
+	void ResumeGame();
 
 	UFUNCTION()
 	void OnDefeatTriggerOverlap(UPrimitiveComponent* OverlappedComponent, 
@@ -97,6 +103,9 @@ public:
 
 	UPROPERTY( BlueprintAssignable, Category= "Events")
 	FOnScoreUp OnScoreUp;
+
+	UPROPERTY( BlueprintAssignable, Category= "Events")
+	FOnGameStart OnGameStart;
 
 	int Score;
 

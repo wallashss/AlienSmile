@@ -28,6 +28,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSpawn();
 
+	void Shuffle();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -46,6 +48,8 @@ private:
 	FRotator LastRot;
 
 	FTimerHandle SpawnTimer;
+
+	int32 ItemIdx;
 
 
 };

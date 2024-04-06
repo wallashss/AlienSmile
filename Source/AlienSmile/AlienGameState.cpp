@@ -7,6 +7,7 @@
 #include <Components/BoxComponent.h>
 #include <Components/CapsuleComponent.h>
 #include <Components/StaticMeshComponent.h>
+
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Engine/Blueprint.h>
@@ -16,6 +17,7 @@
 #include "FunnySpawner.h"
 #include "Monster.h"
 #include "ScorePanel.h"
+#include "VRNotificationsComponent.h"
 
 AAlienGameState::AAlienGameState()
 {
@@ -113,7 +115,56 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * GameOver)
     // Setup Score
     
     ScorePanel = Cast<AScorePanel>(UGameplayStatics::GetActorOfClass(GetWorld(), AScorePanel::StaticClass()));
+
+    // 
+
+    APlayerController * PlayerController = GetWorld()->GetFirstPlayerController();
+    if (PlayerController)
+    {
+        auto Pawn = PlayerController->GetPawn(); 
+        // Pawn->AddComponentByClass<UVRNotificationsComponent>();
+        // auto VRNotifications = Pawn->GetComponentByClass<UVRNotificationsComponent>();
+
+        // TSubclassOf<UActorComponent> Class, bool bManualAttachment, const FTransform& RelativeTransform, bool bDeferredFinish
+        // Pawn->AddComponentByClass<UVRNotificationsComponent>(UVRNotificationsComponent::StaticClass, true, GetTransform(), false);
+        // const auto VRNotification = Pawn->GetComponentByClass<UVRNotificationsComponent>();
+
+        // if(VRNotification)
+        // {
+            
+        // }
+        UVRNotificationsComponent* VRNotification = NewObject<UVRNotificationsComponent>(Pawn);
+
+        VRNotification->HMDPutOnHeadDelegate.AddDynamic(this, &AAlienGameState::ResumeGame);
+
+        VRNotification->HMDRemovedFromHeadDelegate.AddDynamic(this, &AAlienGameState::PauseGame);
+
+        VRNotification->HMDRecenteredDelegate.AddDynamic(this, &AAlienGameState::ResetPlayer);
+
+    }
+
 }
+
+void AAlienGameState::PauseGame()
+{
+    APlayerController * PlayerController = GetWorld()->GetFirstPlayerController();
+    if (PlayerController)
+    {
+        PlayerController->Pause();
+    }
+
+}
+
+void AAlienGameState::ResumeGame()
+{
+    APlayerController * PlayerController = GetWorld()->GetFirstPlayerController();
+    if (PlayerController)
+    {
+        PlayerController->SetPause(false);
+    }
+    
+}
+
 
 void AAlienGameState::InitGame()
 {
@@ -137,6 +188,8 @@ void AAlienGameState::InitGame()
             UE_LOG(LogAlienSmile, Warning, TEXT("Init Game / s->Objects.Num(): %d "), s->Objects.Num());
         }
     }
+
+    OnGameStart.Broadcast();
 }
 
 void AAlienGameState::ResetGame()
@@ -237,8 +290,12 @@ void AAlienGameState::SetGameOver()
     {
         GameOverMesh->SetVisibility(true);
     }
+    else
+    {
+        WPRINT(TEXT("No Game Over instance!"));
+    }
 
-    GetWorldTimerManager().SetTimer(ResetGameTimer, this, &AAlienGameState::ResetGame, 3.0f);
+    GetWorldTimerManager().SetTimer(ResetGameTimer, this, &AAlienGameState::ResetGame, 7.0f);
     // ResetGameTimer
 }
 
@@ -246,6 +303,11 @@ void AAlienGameState::SpawnMonster()
 {
     if(CurrentMonster)
     {
+        // Increase difficult
+        if( Score > 0 && Score % 3 == 0)
+        {
+            CurrentMonster->IncreaseSpeed(50.0f);
+        }
         CurrentMonster->MonsterDir = SpawnDir;
         CurrentMonster->MonsterRot = SpawnRotation;
         CurrentMonster->SetActorLocation(SpawnLocation);

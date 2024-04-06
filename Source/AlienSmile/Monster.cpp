@@ -142,6 +142,12 @@ void AMonster::SetWinner()
 	OnMonsterWinner();
 }
 
+void AMonster::IncreaseSpeed(float DeltaSpeed)
+{
+	MonsterSpeed += DeltaSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = MonsterSpeed;
+}
+
 bool AMonster::CheckDead()
 {
 	if(HP <= 0)

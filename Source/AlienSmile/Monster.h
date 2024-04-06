@@ -71,6 +71,9 @@ public:
 	UFUNCTION(Category = "Alien")
 	void OnMonsterHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& hit);
 
+	UFUNCTION(BlueprintCallable, Category = "Alien")
+	void IncreaseSpeed(float DeltaSpeed);
+
 	bool CheckDead();
 
 	void ResetMonster();
