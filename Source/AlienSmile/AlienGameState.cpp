@@ -19,6 +19,8 @@
 #include "ScorePanel.h"
 #include "VRNotificationsComponent.h"
 
+
+static const float RESET_GAME_TIMEOUT = 5.5f;
 AAlienGameState::AAlienGameState()
 {
     // static ConstructorHelpers::FClassFinder<AMonster> MonsterClass(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/BP_Monster.BP_Monster'"));
@@ -295,7 +297,7 @@ void AAlienGameState::SetGameOver()
         WPRINT(TEXT("No Game Over instance!"));
     }
 
-    GetWorldTimerManager().SetTimer(ResetGameTimer, this, &AAlienGameState::ResetGame, 7.0f);
+    GetWorldTimerManager().SetTimer(ResetGameTimer, this, &AAlienGameState::ResetGame, RESET_GAME_TIMEOUT);
     // ResetGameTimer
 }
 

@@ -38,7 +38,7 @@ Enjoy!
 
 ## Assets Credit
 
-First of all, we are grateful for the artist that created these asset and allowed us to use them. Thank you for your work! <3
+First of all, we are grateful for the artist that created these asset and allowed us to use them. Thank you for your work and your kindness to share! <3
 
 ### Music
 
@@ -46,20 +46,22 @@ https://opengameart.org/content/mystical-theme
 Alexandr Zhelanov, https://soundcloud.com/alexandr-zhelanov
 
 
-https://opengameart.org/content/game-over-0
+Game Over by qubodup -- https://freesound.org/s/238954/ -- License: Attribution 4.0
 
 
 ### Models
 
 CP Rubber Chicken V2
+
 https://sketchfab.com/3d-models/cp-rubber-chicken-v2-4fb4c054c0bd417a9a952166b37b91c9
 
 
 chicken gun jolly chimp
+
 https://sketchfab.com/3d-models/chicken-gun-jolly-chimp-5eadc775bd1045f58a07c6a07b976e81#download
 
-
 Doggy Meme Dog PS1
+
 https://sketchfab.com/3d-models/doggy-meme-dog-ps1-8f9361ab396e4c21a53bc50a57a740cd#download
 
 3D Low Poly Model of Tesla Cybertruck 2021 - Retro futurist Pickup
