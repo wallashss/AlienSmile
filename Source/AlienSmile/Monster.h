@@ -74,6 +74,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Alien")
 	void IncreaseSpeed(float DeltaSpeed);
 
+	UFUNCTION(BlueprintCallable, Category = "Alien")
+	void SetTarget(FVector Target);
+
 	bool CheckDead();
 
 	void ResetMonster();
@@ -112,6 +115,8 @@ public:
 	FVector MonsterDir;
 
 	FRotator MonsterRot;
+
+	FVector Target;
 
 	FOnMonsterDefeated OnMonsterDefeated;
 

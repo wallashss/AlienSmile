@@ -97,8 +97,12 @@ void AMonster::Tick(float DeltaTime)
 
 	if (IsMoving)
 	{
-		SetActorRotation(MonsterRot);
-		AddMovementInput(MonsterDir);
+		auto Loc = GetActorLocation();
+		auto Dir = Target - Loc;
+		Dir.Normalize();
+		const auto Rot = UKismetMathLibrary::FindLookAtRotation(Loc, Target);
+		SetActorRotation(Rot);
+		AddMovementInput(Dir);
 	}
 
 }
@@ -147,6 +151,12 @@ void AMonster::IncreaseSpeed(float DeltaSpeed)
 	MonsterSpeed += DeltaSpeed;
 	GetCharacterMovement()->MaxWalkSpeed = MonsterSpeed;
 }
+
+void AMonster::SetTarget(FVector InputTargert)
+{
+	Target = InputTargert;
+}
+
 
 bool AMonster::CheckDead()
 {

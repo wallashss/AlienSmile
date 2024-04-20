@@ -143,6 +143,8 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * GameOver)
 
         VRNotification->HMDRecenteredDelegate.AddDynamic(this, &AAlienGameState::ResetPlayer);
 
+        CurrentMonster->SetTarget(Pawn->GetActorLocation());
+
     }
 
 }
