@@ -151,6 +151,7 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * GameOver)
 
 void AAlienGameState::PauseGame()
 {
+    UE_LOG(LogAlienSmile, Warning, TEXT("REQUEST PAUSE GAME!"));
     APlayerController * PlayerController = GetWorld()->GetFirstPlayerController();
     if (PlayerController)
     {
@@ -161,6 +162,7 @@ void AAlienGameState::PauseGame()
 
 void AAlienGameState::ResumeGame()
 {
+    UE_LOG(LogAlienSmile, Warning, TEXT("REQUEST RESUME GAME!"));
     APlayerController * PlayerController = GetWorld()->GetFirstPlayerController();
     if (PlayerController)
     {

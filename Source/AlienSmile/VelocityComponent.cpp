@@ -38,7 +38,7 @@ void UVelocityComponent::OnPosUpdate()
 {
 	const auto NewPos = GetComponentLocation();
 	CurrentVelocity = (NewPos - LastPos) / UPDATE_INTERVAL;
-	UE_LOG(LogAlienSmile, Warning, TEXT("%s %s %s"), *NewPos.ToString(), *LastPos.ToString(), *CurrentVelocity.ToString());
+	// UE_LOG(LogAlienSmile, Warning, TEXT("%s %s %s"), *NewPos.ToString(), *LastPos.ToString(), *CurrentVelocity.ToString());
 	LastPos = NewPos; 
 
 }
