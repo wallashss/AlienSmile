@@ -135,15 +135,15 @@ void AAlienGameState::SetupGame(AActor * SpawnLoc, AActor * GameOver)
         // {
             
         // }
-        UVRNotificationsComponent* VRNotification = NewObject<UVRNotificationsComponent>(Pawn);
+        // UVRNotificationsComponent* VRNotification = NewObject<UVRNotificationsComponent>(Pawn);
 
-        VRNotification->HMDPutOnHeadDelegate.AddDynamic(this, &AAlienGameState::ResumeGame);
+        // VRNotification->HMDPutOnHeadDelegate.AddDynamic(this, &AAlienGameState::ResumeGame);
 
-        VRNotification->HMDRemovedFromHeadDelegate.AddDynamic(this, &AAlienGameState::PauseGame);
+        // VRNotification->HMDRemovedFromHeadDelegate.AddDynamic(this, &AAlienGameState::PauseGame);
 
-        VRNotification->HMDRecenteredDelegate.AddDynamic(this, &AAlienGameState::ResetPlayer);
+        // VRNotification->HMDRecenteredDelegate.AddDynamic(this, &AAlienGameState::ResetPlayer);
 
-        CurrentMonster->SetTarget(Pawn->GetActorLocation());
+        // CurrentMonster->SetTarget(Pawn->GetActorLocation());
 
     }
 
