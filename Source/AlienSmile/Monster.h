@@ -10,7 +10,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMonsterDefeated);
 
 
 UCLASS()
-class ALIENSMILE_API AMonster : public ACharacter
+class ALIENSMILE_API AMonster : public APawn
 {
 	GENERATED_BODY()
 
@@ -71,6 +71,9 @@ public:
 	UFUNCTION(Category = "Alien")
 	void OnMonsterHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& hit);
 
+	UFUNCTION(Category = "Alien")
+	void OnCapsuleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit );
+
 	UFUNCTION(BlueprintCallable, Category = "Alien")
 	void IncreaseSpeed(float DeltaSpeed);
 
@@ -119,6 +122,14 @@ public:
 	FVector Target;
 
 	FOnMonsterDefeated OnMonsterDefeated;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Alien")
+	class USkeletalMeshComponent * Mesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Alien")
+	class UCapsuleComponent * Capsule;
+
+	float FloorHeight;
 
 
 };

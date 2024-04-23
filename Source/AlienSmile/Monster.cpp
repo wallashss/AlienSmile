@@ -13,6 +13,8 @@
 
 #include <Kismet/KismetMathLibrary.h>
 
+
+static const float DOWN_SPEED = 1000.0f;
 // Sets default values
 AMonster::AMonster()
 {
@@ -20,6 +22,20 @@ AMonster::AMonster()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// MouthCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Mouth"));
+
+	if (SetRootComponent(Mesh))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ok to set root component"));
+	}
+
+
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+
+	Capsule->SetGenerateOverlapEvents(true);
+	Capsule->SetSimulatePhysics(true);
+	Mesh->SetupAttachment(Capsule);
 
 	MonsterSpeed = 100.0f;
 
@@ -31,7 +47,7 @@ AMonster::AMonster()
 
 	IsSmiling = false;
 
-	GetCharacterMovement()->MaxWalkSpeed = MonsterSpeed;
+	// GetCharacterMovement()->MaxWalkSpeed = MonsterSpeed;
 }
 
 // Called when the game starts or when spawned
@@ -39,14 +55,21 @@ void AMonster::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetCharacterMovement()->MaxWalkSpeed = MonsterSpeed;
+	// GetCharacterMovement()->MaxWalkSpeed = MonsterSpeed;
 
 	MonsterDir = GetActorForwardVector();
 
 	MonsterRot = GetActorRotation();
 
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMonster::OnMonsterOverlap);
+	// GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AMonster::OnMonsterOverlap);
+	Capsule->OnComponentBeginOverlap.AddDynamic(this, &AMonster::OnMonsterOverlap);
 	OnActorHit.AddDynamic(this, &AMonster::OnMonsterHit);
+
+	// DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_FiveParams( FComponentHitSignature, UPrimitiveComponent, OnComponentHit, UPrimitiveComponent*, HitComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, FVector, NormalImpulse, const FHitResult&, Hit );
+	Capsule->OnComponentHit.AddDynamic(this, &AMonster::OnCapsuleHit);
+
+	// Save original height
+	FloorHeight = GetActorLocation().Z;
 	
 	// IsMoving = true;
 	
@@ -60,13 +83,22 @@ void AMonster::OnMonsterOverlap(UPrimitiveComponent* OverlappedComponent,
 										  const FHitResult & SweepResult)
 {
 
-	// UE_LOG(LogAlienSmile, Warning, TEXT("MOnster OVERLAP: %s"), *OtherActor->GetActorLabel());
+	UE_LOG(LogAlienSmile, Warning, TEXT("MOnster OVERLAP: %s"), *OtherActor->GetActorLabel());
+
+}
+
+void AMonster::OnCapsuleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit )
+{
+	UE_LOG(LogAlienSmile, Warning, TEXT("MONSTER CAPSULE HIT"));
 
 }
 
 void AMonster::OnMonsterHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& hit)
 {
 	auto FunnyObj = OtherActor->GetComponentByClass<UFunnyObject>();
+
+
+	UE_LOG(LogAlienSmile, Warning, TEXT("HIT"));
 
 	if(!FunnyObj)
 	{
@@ -98,11 +130,25 @@ void AMonster::Tick(float DeltaTime)
 	if (IsMoving)
 	{
 		auto Loc = GetActorLocation();
-		auto Dir = Target - Loc;
-		Dir.Normalize();
-		const auto Rot = UKismetMathLibrary::FindLookAtRotation(Loc, Target);
-		SetActorRotation(Rot);
-		AddMovementInput(Dir);
+
+		if(Loc.Z > FloorHeight)
+		{
+			auto NewLoc = Loc + FVector::DownVector * DOWN_SPEED * DeltaTime;
+			NewLoc.Z = UKismetMathLibrary::FMax(FloorHeight, NewLoc.Z); 
+			SetActorLocation(NewLoc);
+		}
+		else
+		{
+			auto Dir = Target - Loc;
+			Dir.Normalize();
+			const auto Rot = UKismetMathLibrary::FindLookAtRotation(Loc, Target);
+			SetActorRotation(Rot);
+			// AddMovementInput(Dir);
+			auto NewLoc = Loc + Dir * MonsterSpeed * DeltaTime;
+			NewLoc.Z = FloorHeight;
+			SetActorLocation(NewLoc);
+
+		}
 	}
 
 }
@@ -149,7 +195,7 @@ void AMonster::SetWinner()
 void AMonster::IncreaseSpeed(float DeltaSpeed)
 {
 	MonsterSpeed += DeltaSpeed;
-	GetCharacterMovement()->MaxWalkSpeed = MonsterSpeed;
+	// GetCharacterMovement()->MaxWalkSpeed = MonsterSpeed;
 }
 
 void AMonster::SetTarget(FVector InputTargert)
