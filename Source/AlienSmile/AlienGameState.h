@@ -110,5 +110,9 @@ public:
 	int Score;
 
 	int32 FunnyIndicesCount;
+
+	FVector OriginalPlayerPos;
+
+	FRotator OriginalPlayerRot;
 	
 };

@@ -83,13 +83,13 @@ void AMonster::OnMonsterOverlap(UPrimitiveComponent* OverlappedComponent,
 										  const FHitResult & SweepResult)
 {
 
-	UE_LOG(LogAlienSmile, Warning, TEXT("MOnster OVERLAP: %s"), *OtherActor->GetActorLabel());
+	// UE_LOG(LogAlienSmile, Warning, TEXT("MOnster OVERLAP: %s"), *OtherActor->GetActorLabel());
 
 }
 
 void AMonster::OnCapsuleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit )
 {
-	UE_LOG(LogAlienSmile, Warning, TEXT("MONSTER CAPSULE HIT"));
+	// UE_LOG(LogAlienSmile, Warning, TEXT("MONSTER CAPSULE HIT"));
 
 }
 

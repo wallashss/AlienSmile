@@ -60,8 +60,19 @@ void AAlienGameState::BeginPlay()
 
     WPRINT(TEXT("**************GAME START**************"))
 
+    if(APlayerController * PlayerController = GetWorld()->GetFirstPlayerController())
+    {
+        const auto Pawn = PlayerController->GetPawn();
+        OriginalPlayerPos = Pawn->GetActorLocation();
+        OriginalPlayerRot = Pawn->GetActorRotation();
 
-    // SpawnMonster();
+        // if(auto Cam = Pawn->FindComponentByClass<UCameraComponent>())
+        // {
+        //     OriginalPlayerPos = Cam->GetComponentLocation();
+        //     OriginalPlayerRot = Cam->GetComponentRotation();
+        //     UE_LOG(LogAlienSmile, Warning, TEXT("Original CAM: %s"), *OriginalPlayerPos.ToString());
+        // }
+    }
 
 
 }
@@ -174,13 +185,17 @@ void AAlienGameState::ResumeGame()
 
 void AAlienGameState::InitGame()
 {
+    // Setup score
     Score = 0;
     if (ScorePanel)
     {
         ScorePanel->InitScore(Score);
     }
+
+    // Respawn Monster
     RequestNewMonster();
 
+    // Setup Spawners
     TArray<AActor*> Spawners;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFunnySpawner::StaticClass(), Spawners);
 
@@ -195,6 +210,10 @@ void AAlienGameState::InitGame()
         }
     }
 
+    
+
+
+    // Broadcast Game start
     OnGameStart.Broadcast();
 }
 
@@ -239,10 +258,7 @@ void AAlienGameState::ResetPlayer()
             auto CamRot = Cam->GetComponentRotation();
             auto PawnRot = Pawn->GetActorRotation();
 
-            UE_LOG(LogAlienSmile, Warning, TEXT("Cam Rot: %s"),*CamRot.ToString());
-            UE_LOG(LogAlienSmile, Warning, TEXT("Pawn Rot: %s"),*Pawn->GetActorRotation().ToString());
-
-            auto TempRot = UKismetMathLibrary::ComposeRotators(CamRot.GetInverse(), PawnRot);
+            auto TempRot = UKismetMathLibrary::ComposeRotators(CamRot.GetInverse(), OriginalPlayerRot);
             auto FinalRot = UKismetMathLibrary::ComposeRotators(PawnRot, TempRot);
             FinalRot.Roll = 0.0f;
             FinalRot.Pitch = 0.0f;
@@ -250,12 +266,9 @@ void AAlienGameState::ResetPlayer()
 
             auto PawnLoc = Pawn->GetActorLocation();
             auto CamLoc = Cam->GetComponentLocation();
+            auto Diff = OriginalPlayerPos - CamLoc;
 
-            auto Diff = CamLoc - PawnLoc;
-
-            UE_LOG(LogAlienSmile, Warning, TEXT("Player: %s | Cam: %s | Diff: %s"), *PawnLoc.ToString(), *CamLoc.ToString(), *Diff.ToString() );
-            Pawn->SetActorLocation(PawnLoc - FVector(Diff.X, Diff.Y, 0));
-        
+            Pawn->SetActorLocation(PawnLoc + FVector(Diff.X, Diff.Y, 0));        
         }
         else
         {
