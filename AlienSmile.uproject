@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.2",
+	"EngineAssociation": "5.4",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -22,6 +22,20 @@
 			]
 		},
 		{
+			"Name": "Text3D",
+			"Enabled": true
+		},
+		{
+			"Name": "OpenXR",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Linux",
+				"Android",
+				"VisionOS"
+			]
+		},
+		{
 			"Name": "OculusXR",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/8313d8d7e7cf4e03a33e79eb757bccba",
@@ -29,10 +43,6 @@
 				"Win64",
 				"Android"
 			]
-		},
-		{
-			"Name": "Text3D",
-			"Enabled": true
 		}
 	]
 }

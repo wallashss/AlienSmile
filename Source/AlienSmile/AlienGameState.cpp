@@ -17,7 +17,7 @@
 #include "FunnySpawner.h"
 #include "Monster.h"
 #include "ScorePanel.h"
-#include "VRNotificationsComponent.h"
+//#include "VRNotificationsComponent.h"
 
 
 static const float RESET_GAME_TIMEOUT = 5.5f;
